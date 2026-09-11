@@ -9,9 +9,6 @@ html {
 }
 
 body {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-
     margin: 0;
     min-height: 100vh;
 
@@ -21,32 +18,38 @@ body {
     font: 400 1rem/1.6 "Raleway", sans-serif;
 }
 
-body.project {
-    display: block;
+header,
+main,
+footer {
+    max-width: 900px;
+    margin: 0 auto;
+
+    padding-left: 48px;
+    padding-right: 48px;
 }
 
-aside {
-    position: sticky;
-    top: 0;
+body > header {
+    padding-top: 48px;
+    padding-bottom: 24px;
 
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+    margin-bottom: 48px;
 
-    height: 100vh;
-
-    padding: 32px;
-
-    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
 
 main {
-    max-width: 1200px;
-    padding: 32px 48px;
+    padding-bottom: 32px;
 }
 
-body.project main {
-    max-width: 900px;
-    margin: 0 auto;
+body > footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding-top: 24px;
+    padding-bottom: 48px;
 }
 
 section,
@@ -65,16 +68,15 @@ h3 {
 }
 
 h1 {
-    font-size: 1rem;
     font-weight: 600;
+}
+
+body > header h1 {
+    font-size: 1.5rem;
 }
 
 body.project h1 {
     font-size: 2rem;
-}
-
-h1 span {
-    display: block;
 }
 
 h2 {
@@ -140,11 +142,6 @@ nav li + li {
     margin-top: 8px;
 }
 
-nav ul ul {
-    margin-top: 8px;
-    padding-left: 16px;
-}
-
 .about-content {
     display: grid;
     grid-template-columns: 200px 1fr;
@@ -177,29 +174,13 @@ footer {
     gap: 16px;
 }
 
-body:not(.project) > footer {
-    grid-column: 2;
-    justify-content: flex-end;
-    padding: 0 48px 24px;
-    text-align: right;
-}
-
 @media (max-width: 900px) {
 
-    body {
-        display: block;
-    }
-
-    aside {
-        position: static;
-        height: auto;
-        border-right: 0;
-        border-bottom: 1px solid #ddd;
-    }
-
+    header,
     main,
-    body:not(.project) > footer {
-        padding: 24px;
+    footer {
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     .about-content {
