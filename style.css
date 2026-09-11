@@ -54,6 +54,10 @@ details {
     margin-bottom: 64px;
 }
 
+details:not([open]) {
+    margin-bottom: 0;
+}
+
 h1,
 h2,
 h3 {
@@ -141,14 +145,10 @@ nav ul ul {
     padding-left: 16px;
 }
 
-#about {
+.about-content {
     display: grid;
     grid-template-columns: 200px 1fr;
     gap: 32px;
-}
-
-#about > summary {
-    grid-column: 1 / -1;
 }
 
 iframe {
@@ -202,7 +202,7 @@ body:not(.project) > footer {
         padding: 24px;
     }
 
-    #about {
+    .about-content {
         display: block;
     }
 
