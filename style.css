@@ -100,6 +100,18 @@ img {
     max-width: 100%;
 }
 
+figure {
+    margin: 0;
+}
+
+#about img {
+    width: 200px;
+    height: 200px;
+
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 summary {
     cursor: pointer;
 }
@@ -131,7 +143,7 @@ nav ul ul {
 
 #about {
     display: grid;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 200px 1fr;
     gap: 32px;
 }
 
