@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
- 
+
 <head>
 
     <meta charset="utf-8">
@@ -37,9 +37,7 @@
                         alt="Portrait of Timo Luukkonen">
 
                 </figure>
- 
-             
-<!-- About -->
+
                 <article>
 
                     <p>
@@ -59,9 +57,7 @@
             </div>
 
         </details>
-     
-<!-- CV -->
-     
+
         <details id="cv">
 
             <summary><h2>CV</h2></summary>
@@ -214,18 +210,15 @@
 
         </details>
 
-<!-- Research -->
-     
         <details id="research">
 
             <summary><h2>Research</h2></summary>
-             <p> 
-              Selected research articles. More can be found from  <a href="https://scholar.google.com/citations?user=yi7P74kAAAAJ" target="_blank">Google Scholar</a> 
-             </p>
-            
-         <br>
-         
-              <article>
+
+            <p>
+                Selected research articles. More can be found from <a href="https://scholar.google.com/citations?user=yi7P74kAAAAJ" target="_blank">Google Scholar</a>
+            </p>
+
+            <article>
 
                 <p class="meta">
                     2026 / Book Chapter
@@ -325,8 +318,6 @@
 
         <details id="projects">
 
-<!-- Projects -->
-         
             <summary><h2>Projects</h2></summary>
 
             <div class="projects-content">
@@ -353,7 +344,6 @@
                             </a>
                         </li>
 
-                     
                         <li>
                             <a href="projects/emojiboard.html" target="project">
                                 EmojiBoard
@@ -365,7 +355,7 @@
                                 AI Visor
                             </a>
                         </li>
-                    
+
                     </ul>
 
                 </nav>
@@ -384,7 +374,7 @@
     </main>
 
     <footer>
-     
+
         <a href="mailto:timo@samaani.info">Email</a>
         <a href="https://github.com/tiluukko" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/timo-luukkonen/" target="_blank">LinkedIn</a>
@@ -395,6 +385,14 @@
         </p>
 
     </footer>
+
+    <script>
+
+        document.querySelector('iframe[name="project"]').addEventListener('load', function () {
+            this.style.height = this.contentWindow.document.documentElement.scrollHeight + 'px';
+        });
+
+    </script>
 
 </body>
 
