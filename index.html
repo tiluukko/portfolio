@@ -388,8 +388,15 @@
 
     <script>
 
-        document.querySelector('iframe[name="project"]').addEventListener('load', function () {
-            this.style.height = this.contentWindow.document.documentElement.scrollHeight + 'px';
+        var projectFrame = document.querySelector('iframe[name="project"]');
+
+        function resizeProjectFrame() {
+            projectFrame.style.height = projectFrame.contentWindow.document.documentElement.scrollHeight + 'px';
+        }
+
+        projectFrame.addEventListener('load', function () {
+            resizeProjectFrame();
+            projectFrame.contentWindow.document.fonts.ready.then(resizeProjectFrame);
         });
 
     </script>
