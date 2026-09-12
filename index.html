@@ -393,18 +393,24 @@
     </footer>
 
     <script>
-
+ 
         var projectFrame = document.querySelector('iframe[name="project"]');
-
+ 
         function resizeProjectFrame() {
+            projectFrame.style.height = 'auto';
             projectFrame.style.height = projectFrame.contentWindow.document.documentElement.scrollHeight + 'px';
         }
-
+ 
         projectFrame.addEventListener('load', function () {
             resizeProjectFrame();
             projectFrame.contentWindow.document.fonts.ready.then(resizeProjectFrame);
         });
-
+ 
+        if (projectFrame.contentDocument && projectFrame.contentDocument.readyState === 'complete') {
+            resizeProjectFrame();
+            projectFrame.contentWindow.document.fonts.ready.then(resizeProjectFrame);
+        }
+ 
     </script>
 
 </body>
