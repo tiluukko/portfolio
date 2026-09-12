@@ -96,7 +96,7 @@ a:hover {
     text-decoration: underline;
 }
 
-img, video {
+img {
     max-width: 100%;
 }
 
@@ -113,30 +113,7 @@ figure {
 }
 
 summary {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    list-style: none;
     cursor: pointer;
-}
-
-summary::-webkit-details-marker {
-    display: none;
-}
-
-summary::before {
-    content: "▸";
-    flex-shrink: 0;
-    color: #666;
-}
-
-details[open] > summary::before {
-    content: "▾";
-}
-
-summary h2 {
-    flex: 1;
 }
 
 nav,
