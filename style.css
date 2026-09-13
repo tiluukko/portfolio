@@ -1,3 +1,19 @@
+:root {
+    --color-text: #111;
+    --color-bg: #fff;
+    --color-meta: #666;
+    --color-border: #ddd;
+    --color-article-text: #555;
+}
+
+body:has(#theme-toggle:checked) {
+    --color-text: #eee;
+    --color-bg: #111;
+    --color-meta: #999;
+    --color-border: #333;
+    --color-article-text: #bbb;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -12,10 +28,12 @@ body {
     margin: 0;
     min-height: 100vh;
 
-    color: #111;
-    background: #fff;
+    color: var(--color-text);
+    background: var(--color-bg);
 
     font: 400 1rem/1.6 "Nimbus Sans L", sans-serif;
+
+    transition: color .2s ease, background .2s ease;
 }
 
 header,
@@ -29,6 +47,10 @@ footer {
 }
 
 body > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     padding-top: 48px;
     padding-bottom: 24px;
 
@@ -77,7 +99,7 @@ h2 {
     margin-bottom: 32px;
     padding-bottom: 12px;
 
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--color-border);
 
     font: 400 1rem "Nimbus Sans L", monospace;
 }
@@ -123,7 +145,7 @@ footer a {
 }
 
 .meta {
-    color: #666;
+    color: var(--color-meta);
 }
 
 nav ul {
@@ -151,7 +173,7 @@ iframe {
     width: 100%;
     height: 600px;
 
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
 }
 
 .gallery {
@@ -165,7 +187,57 @@ article + article {
 }
 
 article p {
-    color: #555;
+    color: var(--color-article-text);
+}
+
+.projects-nav nav + nav {
+    margin-top: 24px;
+}
+
+.theme-switch {
+    display: inline-flex;
+    flex-shrink: 0;
+
+    cursor: pointer;
+}
+
+.theme-switch input {
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    opacity: 0;
+}
+
+.theme-switch span {
+    position: relative;
+
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+
+    border: 1px solid var(--color-text);
+    border-radius: 11px;
+}
+
+.theme-switch span::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+
+    width: 16px;
+    height: 16px;
+
+    background: var(--color-text);
+    border-radius: 50%;
+
+    transition: transform .2s ease;
+}
+
+.theme-switch input:checked + span::before {
+    transform: translateX(18px);
 }
 
 footer {
