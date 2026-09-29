@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Page Generator</title>
+<style>
+    body {
+        max-width: 720px;
+        margin: 40px auto;
+        padding: 0 20px 80px;
+        font: 15px/1.5 -apple-system, system-ui, sans-serif;
+        color: #111;
+    }
+    h1 { font-size: 1.3rem; }
+    h2 { font-size: 1rem; margin-top: 40px; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+    label { display: block; font-weight: 600; margin-top: 16px; margin-bottom: 4px; }
+    small { display: block; color: #666; font-weight: 400; margin-top: -2px; margin-bottom: 4px; }
+    input[type=text], input[type=url], textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px;
+        font: inherit;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .link-row, .image-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        align-items: center;
+    }
+    .link-row input { flex: 1; }
+    .image-row span { flex-shrink: 0; font-family: monospace; font-size: 13px; color: #444; width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .image-row input { flex: 1; }
+    button {
+        font: inherit;
+        padding: 6px 14px;
+        border: 1px solid #111;
+        background: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover { background: #111; color: #fff; }
+    .small-btn { padding: 2px 8px; font-size: 13px; }
+    #generateBtn { margin-top: 30px; font-size: 1rem; padding: 10px 20px; }
+    #output {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 300px;
+        font: 13px/1.4 monospace;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 10px;
+        white-space: pre;
+    }
+    .output-actions { display: flex; gap: 10px; margin-top: 10px; }
+    .hint { color: #666; font-size: 13px; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Project Page Generator</h1>
+<p class="hint">Täytä kentät, valitse kuvat/video, ja paina "Generoi HTML". Muista silti itse siirtää kuva- ja videotiedostot oikeaan <code>assets/images/&lt;projekti&gt;/</code>-kansioon — tämä työkalu ei voi tehdä sitä puolestasi.</p>
+
+<h2>Perustiedot</h2>
+
+<label for="title">Otsikko</label>
+<input type="text" id="title" placeholder="esim. Smart LED Jacket">
+
+<label for="meta">Meta-rivi</label>
+<small>esim. "Research Device - 2026"</small>
+<input type="text" id="meta" placeholder="Research Device - 2026">
+
+<label for="slug">Projektin kansionimi</label>
+<small>käytetään sekä tiedostonimenä (esim. ledjacket.html) että kuvapolkuna (assets/images/ledjacket/...)</small>
+<input type="text" id="slug" placeholder="ledjacket">
+
+<label for="hero">Hero-kuva headeriin (valinnainen)</label>
+<input type="file" id="hero" accept="image/*">
+
+<h2>Leipäteksti</h2>
+<label for="paragraphs">Kappaleet</label>
+<small>erota kappaleet tyhjällä rivillä</small>
+<textarea id="paragraphs" placeholder="Ensimmäinen kappale...
+
+Toinen kappale..."></textarea>
+
+<h2>Kuvat</h2>
+<input type="file" id="images" accept="image/*" multiple>
+<div id="imageList"></div>
+
+<h2>Video (valinnainen)</h2>
+<input type="file" id="video" accept="video/*">
+
+<h2>Related Links</h2>
+<div id="linkList"></div>
+<button type="button" class="small-btn" onclick="addLinkRow()">+ Lisää linkki</button>
+
+<div>
+    <button id="generateBtn" onclick="generate()">Generoi HTML</button>
+</div>
+
+<textarea id="output" readonly></textarea>
+<div class="output-actions">
+    <button onclick="copyOutput()">Kopioi</button>
+    <button onclick="downloadOutput()">Lataa .html</button>
+</div>
+
+<script>
+let imageFiles = [];
+
+document.getElementById('images').addEventListener('change', function (e) {
+    imageFiles = Array.from(e.target.files);
+    const list = document.getElementById('imageList');
+    list.innerHTML = '';
+    imageFiles.forEach((file, i) => {
+        const defaultAlt = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+        const row = document.createElement('div');
+        row.className = 'image-row';
+        row.innerHTML = `<span>${file.name}</span><input type="text" data-alt-index="${i}" placeholder="alt-teksti" value="${defaultAlt}">`;
+        list.appendChild(row);
+    });
+});
+
+function addLinkRow(label, url) {
+    const list = document.getElementById('linkList');
+    const row = document.createElement('div');
+    row.className = 'link-row';
+    row.innerHTML = `
+        <input type="text" class="link-label" placeholder="Nimi (esim. GitHub)" value="${label || ''}">
+        <input type="url" class="link-url" placeholder="https://..." value="${url || ''}">
+        <button type="button" class="small-btn" onclick="this.parentElement.remove()">✕</button>
+    `;
+    list.appendChild(row);
+}
+addLinkRow();
+
+function escapeHtml(str) {
+    return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function generate() {
+    const title = escapeHtml(document.getElementById('title').value.trim());
+    const meta = escapeHtml(document.getElementById('meta').value.trim());
+    const slug = document.getElementById('slug').value.trim() || 'project';
+    const heroFile = document.getElementById('hero').files[0];
+    const videoFile = document.getElementById('video').files[0];
+
+    const paragraphs = document.getElementById('paragraphs').value
+        .split(/\n\s*\n/)
+        .map(p => p.trim())
+        .filter(Boolean)
+        .map(p => `        <p>\n            ${escapeHtml(p)}\n        </p>`)
+        .join('\n\n');
+
+    const altInputs = document.querySelectorAll('#imageList input[data-alt-index]');
+    const images = imageFiles.map((file, i) => {
+        const alt = escapeHtml(altInputs[i] ? altInputs[i].value : '');
+        return `        <img src="../assets/images/${slug}/${file.name}" alt="${alt}">`;
+    }).join('\n');
+
+    const heroBlock = heroFile
+        ? `\n        <img src="../assets/images/${slug}/${heroFile.name}" alt="${escapeHtml(title)}">\n`
+        : '';
+
+    const videoBlock = videoFile
+        ? `\n        <figure>\n            <video controls>\n                <source src="../assets/images/${slug}/${videoFile.name}" type="video/mp4">\n                Selaimesi ei tue videon toistoa.\n            </video>\n        </figure>\n`
+        : '';
+
+    const linkRows = document.querySelectorAll('#linkList .link-row');
+    let links = '';
+    linkRows.forEach(row => {
+        const label = escapeHtml(row.querySelector('.link-label').value.trim());
+        const url = row.querySelector('.link-url').value.trim();
+        if (label && url) {
+            links += `            <a href="${url}">\n                ${label}\n            </a>\n\n`;
+        }
+    });
+    const footerContent = links
+        ? links.trimEnd()
+        : '            <!--\n            <a href=" ">Linkki</a>\n            -->';
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>${title}</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+</head>
+
+<body>
+
+<main>
+
+    <header>
+
+        <p class="meta">
+            ${meta}
+        </p>
+
+        <h1>${title}</h1>
+${heroBlock}
+    </header>
+
+    <article>
+
+${paragraphs}
+
+${images}
+${videoBlock}
+        <h3 class="related-links">Related Links</h3>
+
+        <footer>
+
+${footerContent}
+
+        </footer>
+
+    </article>
+
+</main>
+
+</body>
+
+</html>
+`;
+
+    document.getElementById('output').value = html;
+}
+
+function copyOutput() {
+    const out = document.getElementById('output');
+    out.select();
+    navigator.clipboard.writeText(out.value);
+}
+
+function downloadOutput() {
+    const slug = document.getElementById('slug').value.trim() || 'project';
+    const blob = new Blob([document.getElementById('output').value], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = slug + '.html';
+    a.click();
+}
+</script>
+
+</body>
+</html>
