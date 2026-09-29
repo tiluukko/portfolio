@@ -216,14 +216,10 @@
 
             <summary><h2>Research</h2></summary>
 
-            <article>
-                
-                <p id="research">
-                    Selected research articles. More can be found from <a href="https://scholar.google.com/citations?user=yi7P74kAAAAJ" target="_blank">Google Scholar</a>
-                </p>
-            
-            </article>
-            
+            <p id="research">
+                Selected research articles. More can be found from <a href="https://scholar.google.com/citations?user=yi7P74kAAAAJ" target="_blank">Google Scholar</a>
+            </p>
+
             <article>
 
                 <p class="meta">
@@ -402,7 +398,13 @@
                                     "Renthal" Seat Clamp
                                 </a>
                             </li>
-                            
+
+                            <li>
+                                <a href="projects/ounasvaara.html" target="project">
+                                    Ounasvaara Pendant Lamp
+                                </a>
+                            </li>
+
                         </ul>
                     </nav>
 
@@ -454,24 +456,38 @@
     </footer>
 
     <script>
- 
+
         var projectFrame = document.querySelector('iframe[name="project"]');
- 
-        function resizeProjectFrame() {
+        var projectFrameObserver = null;
+
+        function watchProjectFrame() {
+            if (projectFrameObserver) {
+                projectFrameObserver.disconnect();
+            }
+
+            var frameRoot = projectFrame.contentWindow.document.documentElement;
+
+            // Reset once per page load so a leftover height from the
+            // previous project doesn't feed into this page's own
+            // min-height: 100vh before we've measured its real size.
             projectFrame.style.height = 'auto';
-            projectFrame.style.height = projectFrame.contentWindow.document.documentElement.scrollHeight + 'px';
-        }
- 
-        projectFrame.addEventListener('load', function () {
+
+            function resizeProjectFrame() {
+                projectFrame.style.height = frameRoot.scrollHeight + 'px';
+            }
+
             resizeProjectFrame();
-            projectFrame.contentWindow.document.fonts.ready.then(resizeProjectFrame);
-        });
- 
+
+            projectFrameObserver = new ResizeObserver(resizeProjectFrame);
+            projectFrameObserver.observe(frameRoot);
+        }
+
+        projectFrame.addEventListener('load', watchProjectFrame);
+
         if (projectFrame.contentDocument && projectFrame.contentDocument.readyState === 'complete') {
-            resizeProjectFrame();
-            projectFrame.contentWindow.document.fonts.ready.then(resizeProjectFrame);
+            watchProjectFrame();
         }
- 
+
     </script>
 
 </body>
