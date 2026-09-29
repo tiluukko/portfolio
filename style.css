@@ -257,7 +257,7 @@ article p {
     content: "☾";
 }
 
-article h3:last-of-type {
+.related-links {
     margin-top: 48px;
     padding-top: 16px;
 
