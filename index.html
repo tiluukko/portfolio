@@ -465,12 +465,16 @@
                 projectFrameObserver.disconnect();
             }
 
-            var frameRoot = projectFrame.contentWindow.document.documentElement;
+            var frameDoc = projectFrame.contentWindow.document;
+            var frameRoot = frameDoc.documentElement;
 
-            // Reset once per page load so a leftover height from the
-            // previous project doesn't feed into this page's own
-            // min-height: 100vh before we've measured its real size.
-            projectFrame.style.height = 'auto';
+            // The shared stylesheet gives body "min-height: 100vh". Inside
+            // the iframe that makes the page's measured height depend on
+            // the iframe's own height, which we set from that measurement
+            // (a feedback loop). Neutralise it for framed pages only.
+            var override = frameDoc.createElement('style');
+            override.textContent = 'body { min-height: 0 !important; }';
+            frameDoc.head.appendChild(override);
 
             function resizeProjectFrame() {
                 var newHeight = frameRoot.scrollHeight;
