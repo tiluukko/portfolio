@@ -248,14 +248,10 @@ article p {
 }
 
 .theme-switch::before {
-    content: "☀";
+    content: "◪";
 
     font-size: 1.25rem;
     line-height: 1;
-}
-
-.theme-switch:has(input:checked)::before {
-    content: "☾";
 }
 
 .related-links {
